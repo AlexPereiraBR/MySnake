@@ -21,16 +21,16 @@ class GameScene: SKScene {
         physicsWorld.contactDelegate = self
         view.showsPhysics = true
         
-        let counterClockwiseButton = ControlsFactory.makeButton(at: CGPoint (x: view.scene!.frame.minX + 30, y: view.scene!.frame.minY + 30))
+        let counterClockwiseButton = ControlsFactory.makeButton(at: CGPoint(x: view.scene!.frame.minX + 30, y: view.scene!.frame.minY + 30))
         counterClockwiseButton.name = "counterClockwiseButton"
         addChild(counterClockwiseButton)
         
-        let clockwiseButton = ControlsFactory.makeButton(at: CGPoint (x: view.scene!.frame.maxX - 30 - 50, y: view.scene!.frame.minY + 30))
+        let clockwiseButton = ControlsFactory.makeButton(at: CGPoint(x: view.scene!.frame.maxX - 30 - 50, y: view.scene!.frame.minY + 30))
         clockwiseButton.name = "clockwiseButton"
         addChild(clockwiseButton)
         
         createApple ()
-        snake = Snake(at: CGPoint (x: view.frame.midX, y: view.frame.midY))
+        snake = Snake(at: CGPoint(x: view.frame.midX, y: view.frame.midY))
         addChild(snake!)
     }
     
@@ -107,13 +107,18 @@ extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
         var contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         contactMask ^= Categories.snake
+        
         switch contactMask {
         case Categories.apple:
             let apple = contact.bodyA.node is Apple ?
             contact.bodyA.node : contact.bodyB.node
-            apple?.removeFromParent()
-            snake?.addBodyPart()
-            createApple()
+            if let appleNode = apple as? Apple {
+                appleNode.disappearAnimation {
+                    appleNode.removeFromParent()
+                    self.snake?.addBodyPart()
+                    self.createApple()
+                }
+            }
             
             default:
             break
@@ -123,4 +128,3 @@ extension GameScene: SKPhysicsContactDelegate {
         
     }
 }
-
