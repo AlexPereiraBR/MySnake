@@ -25,6 +25,7 @@ class Snake: SKShapeNode {
     }
     
       func addBodyPart() {
+
         let partSize: CGFloat = 16.0 // From SnakeBodyPart.diameter
         let newPosition: CGPoint
 
@@ -65,6 +66,14 @@ class Snake: SKShapeNode {
         let bodyPart = SnakeBodyPart(at: newPosition)
         body.append(bodyPart)
         addChild(bodyPart)
+
+          // Ensure new body parts are added at the tail's last known position,
+          // or head's position if it's the first new part.
+          let lastPartPosition = body.last?.position ?? body[0].position
+          let bodyPart = SnakeBodyPart(at: lastPartPosition)
+          body.append(bodyPart)
+          addChild(bodyPart)
+
     }
     
     func move(currentTime: TimeInterval) {

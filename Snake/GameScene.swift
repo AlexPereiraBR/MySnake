@@ -202,11 +202,17 @@ extension GameScene: SKPhysicsContactDelegate {
         }
         
         // Create a new scene and transition to it
+
         // Programmatic creation to ensure a fresh state
         let newScene = GameScene(size: self.size) 
         newScene.scaleMode = self.scaleMode
         let transition = SKTransition.fade(withDuration: 0.5)
         view?.presentScene(newScene, transition: transition)
+
+        if let newScene = GameScene(fileNamed: "GameScene") { // Or GameScene(size: self.size) if not using .sks
+            newScene.scaleMode = self.scaleMode
+            let transition = SKTransition.fade(withDuration: 0.5)
+            view?.presentScene(newScene, transition: transition)
         }
     }
 }
