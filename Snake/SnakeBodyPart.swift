@@ -22,8 +22,9 @@ class SnakeBodyPart: SKShapeNode {
         position = point
         
         physicsBody = SKPhysicsBody(circleOfRadius: diameter/2, center: .zero)
-        physicsBody?.categoryBitMask = Categories.snake
-        physicsBody?.contactTestBitMask = Categories.apple
+        physicsBody?.categoryBitMask = Categories.snakeBody
+        physicsBody?.contactTestBitMask = Categories.none // Head does the testing against body parts
+        physicsBody?.collisionBitMask = Categories.none
         
     }
     
