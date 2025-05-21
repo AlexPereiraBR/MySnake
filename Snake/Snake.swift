@@ -25,12 +25,55 @@ class Snake: SKShapeNode {
     }
     
       func addBodyPart() {
+
+        let partSize: CGFloat = 16.0 // From SnakeBodyPart.diameter
+        let newPosition: CGPoint
+
+        if body.count == 1 {
+            // Only head exists, place new part behind the head
+            let head = body[0]
+            // Offset is opposite to the snake's current movement direction
+            let offsetX = -partSize * sin(self.angle)
+            let offsetY = -partSize * cos(self.angle)
+            newPosition = CGPoint(x: head.position.x + offsetX, y: head.position.y + offsetY)
+        } else {
+            // Snake has multiple parts, place new part behind the current tail
+            guard let tail = body.last, body.count >= 2 else {
+                // Should not happen if body.count > 1, but as a safeguard
+                print("Error: Could not determine tail or near-tail part.")
+                return
+            }
+            let nearTail = body[body.count - 2]
+
+            let dx = tail.position.x - nearTail.position.x
+            let dy = tail.position.y - nearTail.position.y
+            let length = sqrt(dx*dx + dy*dy)
+
+            if length > 0 {
+                let normDx = dx / length
+                let normDy = dy / length
+                // Place new part extending from the tail in the direction of (nearTail -> tail)
+                newPosition = CGPoint(x: tail.position.x + normDx * partSize, y: tail.position.y + normDy * partSize)
+            } else {
+                // Fallback: Parts are stacked or length is zero.
+                // Place new part behind the tail using the snake's global angle.
+                let offsetX = -partSize * sin(self.angle)
+                let offsetY = -partSize * cos(self.angle)
+                newPosition = CGPoint(x: tail.position.x + offsetX, y: tail.position.y + offsetY)
+            }
+        }
+        
+        let bodyPart = SnakeBodyPart(at: newPosition)
+        body.append(bodyPart)
+        addChild(bodyPart)
+
           // Ensure new body parts are added at the tail's last known position,
           // or head's position if it's the first new part.
           let lastPartPosition = body.last?.position ?? body[0].position
           let bodyPart = SnakeBodyPart(at: lastPartPosition)
           body.append(bodyPart)
           addChild(bodyPart)
+
     }
     
     func move(currentTime: TimeInterval) {
