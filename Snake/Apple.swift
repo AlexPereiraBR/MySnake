@@ -25,7 +25,7 @@ class Apple: SKShapeNode {
         physicsBody = SKPhysicsBody(circleOfRadius: diameter/2, center: .zero)
         physicsBody?.categoryBitMask = Categories.apple
         physicsBody?.contactTestBitMask = Categories.snakeHead
-        physicsBody?.collisionBitMask = 0
+        physicsBody?.collisionBitMask = Categories.none // Use new category
         physicsBody?.isDynamic = false
         
         popAnimation()
