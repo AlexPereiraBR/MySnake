@@ -18,6 +18,10 @@ class SnakeHead: SnakeBodyPart {
         let diameter: CGFloat = 24
         path = UIBezierPath(ovalIn: CGRect(x: -diameter/2, y: -diameter/2, width: diameter, height: diameter)).cgPath
         
+        // Physics properties for SnakeHead
+        physicsBody?.categoryBitMask = Categories.snakeHead
+        physicsBody?.contactTestBitMask = Categories.apple | Categories.edge | Categories.snakeBody
+        physicsBody?.collisionBitMask = Categories.none // Or Categories.edge for physical stop
         
     }
     
